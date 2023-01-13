@@ -45,6 +45,46 @@ namespace BookShopWeb.Controllers
             }
             return View(obj);
         }
-    }
+
+
+		//GET
+		public IActionResult Edit(int? id)
+		{
+			if (id == null || id == 0)
+			{
+				return NotFound();
+			}
+			var categoryFromDb = _context.Categories.Find(id);
+			//var categoryFromDbFirst = _context.Categories.FirstOrDefault(u => u.Id == id);
+			//var categoryFromDbSingle = _context.Categories.SingleOrDefault(u => u.Id == id);
+
+			if (categoryFromDb == null)
+			{
+				return NotFound();
+			}
+
+			return View(categoryFromDb);
+		}
+
+		//POST
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Edit(Category obj)
+		{
+			if (obj.Name == obj.DisplayOrder.ToString())
+			{
+				ModelState.AddModelError("name", "The DisplayOrder cannot exactly match the Name.");
+			}
+			if (ModelState.IsValid)
+			{
+				_context.Categories.Update(obj);
+				_context.SaveChanges();
+				TempData["success"] = "Category updated successfully";
+				return RedirectToAction("Index");
+			}
+			return View(obj);
+		}
+
+	}
 }
 
