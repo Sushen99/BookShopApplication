@@ -18,5 +18,13 @@ namespace BookShopWeb.Controllers
             IEnumerable<Category> objCategoryLIst = _context.Categories.ToList();
             return View(objCategoryLIst);
         }
+
+
+        // GET
+        // will fetch model inside the view.cshtml no need to pass
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }
