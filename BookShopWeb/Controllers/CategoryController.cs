@@ -84,7 +84,43 @@ namespace BookShopWeb.Controllers
 			}
 			return View(obj);
 		}
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var categoryFromDb = _context.Categories.Find(id);
+            //var categoryFromDbFirst = _context.Categories.GetFirstOrDefault(u => u.Id == id);
+            //var categoryFromDbSingle = _context.Categories.SingleOrDefault(u => u.Id == id);
 
-	}
+
+
+            if (categoryFromDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(categoryFromDb);
+        }
+
+        //POST
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePOST(int? id)
+        {
+            var obj = _context.Categories.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            _context.Categories.Remove(obj);
+            _context.SaveChanges();
+            TempData["success"] = "Category deleted successfully";
+            return RedirectToAction("Index");
+
+        }
+    }
 }
 
