@@ -41,6 +41,7 @@ namespace BookShopWeb.Controllers
             {
                 _context.Categories.Add(obj);
                 _context.SaveChanges();
+                TempData["success"] = "Category created successfully";// tempdata
                 return RedirectToAction("Index");
             }
             return View(obj);
