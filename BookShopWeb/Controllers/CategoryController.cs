@@ -32,10 +32,14 @@ namespace BookShopWeb.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Category obj)
         {
-            // here if we hit create button then it leads to exception need to add validation
-            _context.Categories.Add(obj);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                _context.Categories.Add(obj);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(obj);
         }
     }
 }
+
