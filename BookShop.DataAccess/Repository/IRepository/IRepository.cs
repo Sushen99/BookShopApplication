@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace BookShop.DataAccess.Repository.IRepository
 {
-	internal interface IRepository
+	public interface IRepository<T>:where T:class
 	{
+		IEnumerable<T> GetAll();
+
+		void Add(T entity);
+		
+		T GeyFirstOrDefault(Expression<Func<T, bool>> filter);
+
+		void Remove(T entity);
+
+		void RemoveRange(IEnumerable<T> entity);
+
 	}
 }
