@@ -1,6 +1,7 @@
-using BookShopWeb.Data;
+
+using BookShopWeb.DataAccess;
 using Microsoft.EntityFrameworkCore;
-using static BookShopWeb.Data.ApplicationDbContext;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
