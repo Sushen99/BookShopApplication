@@ -18,11 +18,7 @@ namespace BookShop.DataAccess.Repository
 			_context = context;
 		}
 
-		void ICategoryRepository.Save()
-		{
-			_context.SaveChanges();
-		}
-
+		
 		void ICategoryRepository.Update(Category obj)
 		{
 			_context.Categories.Update(obj);

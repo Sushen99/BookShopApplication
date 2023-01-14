@@ -1,5 +1,4 @@
-﻿using BookShopWeb.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace BookShop.DataAccess.Repository.IRepository
 {
-    public interface ICategoryRepository : IRepository<Category>
-    {
-        void Update(Category obj);
+	public interface IUnitOfWork
+	{
+		ICategoryRepository Category { get; }
 
-    }
+		void Save();
+	}
 }
