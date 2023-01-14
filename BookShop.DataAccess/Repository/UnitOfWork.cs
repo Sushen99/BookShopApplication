@@ -1,4 +1,5 @@
 ﻿using BookShop.DataAccess.Repository.IRepository;
+using BookShop.Model;
 using BookShopWeb.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,13 @@ namespace BookShop.DataAccess.Repository
 		{
 			_context = context;
 			Category = new CategoryRepository(_context);
-		}
+            CoverType = new CoverTypeRepository(_context);
+        }
 
 		public ICategoryRepository Category { get; private set; }
+        public ICoverTypeRepository CoverType { get; private set; }
 
-		public void Save()
+        public void Save()
 		{
 			_context.SaveChanges();
 		}
