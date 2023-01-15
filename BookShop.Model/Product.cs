@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,7 @@ namespace BookShop.Model
 		// this is to make foreign key for category id in product class and table
 		[Required]
 		public int CategoryId { get; set; }
+		[ForeignKey("CategoryId")]// this is optional , not required , if there is end with 'Id'
 		public Category Category { get; set; }
 
 
