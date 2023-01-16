@@ -3,6 +3,7 @@ using BookShop.Model;
 using BookShopWeb.DataAccess;
 using BookShopWeb.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookShopWeb.Areas.Admin.Controllers
 {
@@ -27,8 +28,20 @@ namespace BookShopWeb.Areas.Admin.Controllers
         public IActionResult Upsert(int? id)
         {
             // need to handle dropdown for coverType and category.
-
-            Product product = new();
+            // Using Projections
+            IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(
+                u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value =u.Id.ToString()
+                });
+			IEnumerable<SelectListItem> CoverTypeList = _unitOfWork.CoverType.GetAll().Select(
+				u => new SelectListItem
+				{
+					Text = u.Name,
+					Value = u.Id.ToString()
+				});
+			Product product = new();
             if (id == null || id == 0)
             {
                 //Create Product
