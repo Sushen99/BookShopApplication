@@ -45,7 +45,8 @@ namespace BookShopWeb.Areas.Admin.Controllers
             if (id == null || id == 0)
             {
                 //Create Product
-                ViewBag.CategoryList = CategoryList; 
+                ViewBag.CategoryList = CategoryList;
+                ViewData["CoverTypeList"] = CoverTypeList;
                 return View(product);
             }
             else
