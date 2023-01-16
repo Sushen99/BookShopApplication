@@ -14,7 +14,7 @@ namespace BookShopWeb.Areas.Admin.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductController(IUnitOfWork unitOfWork,IWebHostEnvironment webHostEnvironment)
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
             _hostEnvironment = webHostEnvironment;
@@ -22,8 +22,8 @@ namespace BookShopWeb.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> objProductLIst = _unitOfWork.Product.GetAll();
-            return View(objProductLIst);
+
+            return View();
         }
 
 
@@ -46,64 +46,64 @@ namespace BookShopWeb.Areas.Admin.Controllers
                 })
             };
 
-			
+
             if (id == null || id == 0)
             {
                 //Create Product
-               // ViewBag.CategoryList = CategoryList;
-               // ViewData["CoverTypeList"] = CoverTypeList;
+                // ViewBag.CategoryList = CategoryList;
+                // ViewData["CoverTypeList"] = CoverTypeList;
                 return View(productVM);
             }
             else
             {
                 //update Product
             }
-			
+
             return View(productVM);
         }
 
-		//POST
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public IActionResult Upsert(ProductVM obj, IFormFile? file)
-		{
+        //POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert(ProductVM obj, IFormFile? file)
+        {
 
-			if (ModelState.IsValid)
-			{
-				string wwwRootPath = _hostEnvironment.WebRootPath;
-				if (file != null)
-				{
-					string fileName = Guid.NewGuid().ToString();
-					var uploads = Path.Combine(wwwRootPath, @"images\products");
-					var extension = Path.GetExtension(file.FileName);
+            if (ModelState.IsValid)
+            {
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString();
+                    var uploads = Path.Combine(wwwRootPath, @"images\products");
+                    var extension = Path.GetExtension(file.FileName);
 
-					using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
-					{
-						file.CopyTo(fileStreams);
-					}
-					obj.Product.ImageURL = @"\images\products\" + fileName + extension;
+                    using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                    {
+                        file.CopyTo(fileStreams);
+                    }
+                    obj.Product.ImageURL = @"\images\products\" + fileName + extension;
 
-				}
-				_unitOfWork.Product.Add(obj.Product);
-				_unitOfWork.Save();
-				TempData["success"] = "Product created successfully";
-				return RedirectToAction("Index");
-			}
-			return View(obj);
-		}
-		public IActionResult Delete(int? id)
+                }
+                _unitOfWork.Product.Add(obj.Product);
+                _unitOfWork.Save();
+                TempData["success"] = "Product created successfully";
+                return RedirectToAction("Index");
+            }
+            return View(obj);
+        }
+        public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-			//var productFromDb = _context.Product.Find(id);
-			var productFromDbFirst = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
-			//var productFromDbSingle = _context.Product.SingleOrDefault(u => u.Id == id);
+            //var productFromDb = _context.Product.Find(id);
+            var productFromDbFirst = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
+            //var productFromDbSingle = _context.Product.SingleOrDefault(u => u.Id == id);
 
 
 
-			if (productFromDbFirst == null)
+            if (productFromDbFirst == null)
             {
                 return NotFound();
             }
@@ -128,6 +128,18 @@ namespace BookShopWeb.Areas.Admin.Controllers
             return RedirectToAction("Index");
 
         }
+
+
+        //API end points for displaying products in table formate
+        #region API Calls
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var productList = _unitOfWork.Product.GetAll();
+            return Json(new { data = productList });
+        }
+
+        #endregion
     }
 }
 
