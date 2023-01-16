@@ -107,55 +107,41 @@ namespace BookShopWeb.Areas.Admin.Controllers
             }
             return View(obj);
         }
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            //var productFromDb = _context.Product.Find(id);
-            var productFromDbFirst = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
-            //var productFromDbSingle = _context.Product.SingleOrDefault(u => u.Id == id);
 
 
 
-            if (productFromDbFirst == null)
-            {
-                return NotFound();
-            }
 
-            return View(productFromDbFirst);
-        }
+		//API end points for displaying products in table formate
+		#region API CALLS
+		[HttpGet]
+		public IActionResult GetAll()
+		{
+			var productList = _unitOfWork.Product.GetAll(includeProperties: "Category,CoverType");
+			return Json(new { data = productList });
+		}
 
-        //POST
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeletePOST(int? id)
-        {
-            var obj = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
-            if (obj == null)
-            {
-                return NotFound();
-            }
+		//POST
+		[HttpDelete]
+		public IActionResult Delete(int? id)
+		{
+			var obj = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
+			if (obj == null)
+			{
+				return Json(new { success = false, message = "Error while deleting" });
+			}
 
-            _unitOfWork.Product.Remove(obj);
-            _unitOfWork.Save();
-            TempData["success"] = "Product deleted successfully";
-            return RedirectToAction("Index");
+			var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.ImageURL.TrimStart('\\'));
+			if (System.IO.File.Exists(oldImagePath))
+			{
+				System.IO.File.Delete(oldImagePath);
+			}
 
-        }
+			_unitOfWork.Product.Remove(obj);
+			_unitOfWork.Save();
+			return Json(new { success = true, message = "Delete Successful" });
 
-
-        //API end points for displaying products in table formate
-        #region API Calls
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var productList = _unitOfWork.Product.GetAll(includeProperties:"Category,CoverType");
-            return Json(new { data = productList });
-        }
-
-        #endregion
-    }
+		}
+		#endregion
+	}
 }
 
