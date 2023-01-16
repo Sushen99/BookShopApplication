@@ -22,22 +22,27 @@ namespace BookShop.Model
 		public string Author { get; set; }
 		[Required]
 		[Range(1,10000)]
-		public double ListPrice { get; set; }
+        [Display(Name = "List Price")]
+        public double ListPrice { get; set; }
 		[Required]
 		[Range(1,10000)]
-		public double Price { get; set; }
+        [Display(Name = "Price for 1-50")]
+        public double Price { get; set; }
 		[Required]
 		[Range(1, 10000)]
-		public double Price50 { get; set; }
-		[Required]
+        [Display(Name = "Price for 51-100")]
+        public double Price50 { get; set; }
+        [Display(Name = "Price for 100+")]
+        [Required]
 		[Range(1, 10000)]
 		public double Price100 { get; set; }
 		[ValidateNever]
 		public string ImageURL { get; set; }
 
 
-		// this is to make foreign key for category id in product class and table
-		[Required]
+        // this is to make foreign key for category id in product class and table
+        [Display(Name = "Category")]
+        [Required]
 		public int CategoryId { get; set; }
 		[ForeignKey("CategoryId")]// this is optional , not required , if there is end with 'Id'
 		[ValidateNever]
@@ -46,7 +51,8 @@ namespace BookShop.Model
 
 		// this is to make foreign key for CoverType id in product class and table
 		[Required]
-		public int CovertypeId { get; set; }
+        [Display(Name = "Cover Type")]
+        public int CovertypeId { get; set; }
 		[ValidateNever]
 		public CoverType CoverType { get; set; }
 
