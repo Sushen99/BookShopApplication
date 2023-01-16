@@ -21,7 +21,27 @@ namespace BookShop.DataAccess.Repository
 
 		public void Update(Product obj)
 		{
-			_context.Products.Update(obj);
+			// this is having one drwbk, only updating single property , it will update all the property
+			//_context.Products.Update(obj);
+			var objFromDb = _context.Products.FirstOrDefault(u => u.Id == obj.Id);
+			if(objFromDb != null)
+			{
+				objFromDb.Title = obj.Title;
+				objFromDb.ISBN = obj.ISBN;
+				objFromDb.Price = obj.Price; ;
+				objFromDb.Price50 = obj.Price50;
+				objFromDb.ListPrice = obj.ListPrice;
+				objFromDb.Price100 = obj.Price100;
+				objFromDb.Author = obj.Author;
+				objFromDb.Description = obj.Description; 
+				objFromDb.Category = obj.Category;
+				objFromDb.CategoryId= obj.CategoryId;
+				
+				if(obj.ImageURL!=null)
+				{
+					objFromDb.ImageURL = obj.ImageURL;
+				}
+			}
 		}
 	}
 }
