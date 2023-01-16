@@ -12,10 +12,12 @@ namespace BookShopWeb.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork,IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _hostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -60,22 +62,36 @@ namespace BookShopWeb.Areas.Admin.Controllers
             return View(productVM);
         }
 
-        //POST
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Upsert(ProductVM obj, IFormFile file)
-        {
-            
-            if (ModelState.IsValid)
-            {
-               // _unitOfWork.Product.Update(obj);
-                _unitOfWork.Save();
-                TempData["success"] = "Product updated successfully";
-                return RedirectToAction("Index");
-            }
-            return View(obj);
-        }
-        public IActionResult Delete(int? id)
+		//POST
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Upsert(ProductVM obj, IFormFile? file)
+		{
+
+			if (ModelState.IsValid)
+			{
+				string wwwRootPath = _hostEnvironment.WebRootPath;
+				if (file != null)
+				{
+					string fileName = Guid.NewGuid().ToString();
+					var uploads = Path.Combine(wwwRootPath, @"images\products");
+					var extension = Path.GetExtension(file.FileName);
+
+					using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+					{
+						file.CopyTo(fileStreams);
+					}
+					obj.Product.ImageURL = @"\images\products\" + fileName + extension;
+
+				}
+				_unitOfWork.Product.Add(obj.Product);
+				_unitOfWork.Save();
+				TempData["success"] = "Product created successfully";
+				return RedirectToAction("Index");
+			}
+			return View(obj);
+		}
+		public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
             {

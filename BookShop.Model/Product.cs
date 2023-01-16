@@ -1,4 +1,5 @@
 ﻿using BookShopWeb.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -31,7 +32,7 @@ namespace BookShop.Model
 		[Required]
 		[Range(1, 10000)]
 		public double Price100 { get; set; }
-
+		[ValidateNever]
 		public string ImageURL { get; set; }
 
 
@@ -39,12 +40,14 @@ namespace BookShop.Model
 		[Required]
 		public int CategoryId { get; set; }
 		[ForeignKey("CategoryId")]// this is optional , not required , if there is end with 'Id'
+		[ValidateNever]
 		public Category Category { get; set; }
 
 
 		// this is to make foreign key for CoverType id in product class and table
 		[Required]
 		public int CovertypeId { get; set; }
+		[ValidateNever]
 		public CoverType CoverType { get; set; }
 
 	}
