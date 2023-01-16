@@ -9,11 +9,12 @@ namespace BookShop.DataAccess.Repository.IRepository
 {
 	public interface IRepository<T> where T:class
 	{
-		IEnumerable<T> GetAll();
+
+		T GetFirstOrDefault(Expression<Func<T, bool>> filter,string? includeProperties = null);
+		IEnumerable<T> GetAll(string? includeProperties = null);
+
 
 		void Add(T entity);
-		
-		T GetFirstOrDefault(Expression<Func<T, bool>> filter);
 
 		void Remove(T entity);
 
